@@ -1,16 +1,36 @@
 var express = require('express');
 var router = express.Router();
-var Lists = require('../db.js');
+var {Lists} = require('../db.js');
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+router.get('/', function(request, response, next) {
+  response.render('index', { title: 'Express' });
 });
 
+router.get('/lists', function(request, response, next) {
+  Lists.all().then((results) => {
+    console.log(results)
+    response.render('lists', {results: results})
+  })
+  .catch((error) => {
+    console.error(error)
+    response.text(error.message)
+  })
+})
+
 //create a list
-router.post('/lists', function(req, res, next) {
-  const description = req.body.description
-  Lists.create(description).then(() => res.redirect('/'))
+router.post('/lists', function(request, response, next) {
+  const description = request.body.description
+  console.log(description)
+  Lists.insert(description)
+  .then(() => {
+    console.log('good')
+    response.redirect('/')
+  })
+  .catch((error) => {
+    console.error(error)
+    response.text(error.message)
+  })
 });
 
 //get a single list
@@ -20,9 +40,9 @@ router.post('/lists', function(req, res, next) {
 
 
 //delete a list
-router.get('/delete/:id', function(res, req, next) {
-  const id = req.params.id
-  Lists.delete(id).then(() => res.redirect('/'))
-});
+// router.get('/delete/:id', function(res, req, next) {
+//   const id = request.params.id
+//   Lists.delete(id).then(() => response.redirect('/'))
+// });
 
 module.exports = router;

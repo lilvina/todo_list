@@ -16,8 +16,8 @@ const Lists = {
   all: () => {
     return db.any(getAllLists)
   },
-  insert: (description) => {
-    return db.one(insertLists, [description])
+  insert: (description, completed) => {
+    return db.none(insertLists, [description, completed])
   },
   oneLists: (id) => {
     return db.one(getListsById, [id])

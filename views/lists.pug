@@ -1,0 +1,10 @@
+extends layout
+
+block content
+    body
+
+      h1.title Todos
+      ul
+        for result in results
+          li= result.description
+          li= result.completed
